@@ -1,4 +1,4 @@
-/*! videojs-contrib-hls - v1.3.7 - 2016-07-27
+/*! videojs-contrib-hls - v1.3.7 - 2016-08-16
 * Copyright (c) 2016 Brightcove; Licensed  */
 /*! videojs-contrib-media-sources - v2.4.4 - 2016-01-22
 * Copyright (c) 2016 Brightcove; Licensed  */
@@ -4677,6 +4677,10 @@ videojs.HlsHandler.prototype.selectPlaylist = function () {
   // filter out any playlists that have been excluded due to
   // incompatible configurations or playback errors
   sortedPlaylists = sortedPlaylists.filter(function(variant) {
+    // Exclude audio variants. This method must return a video variant.
+    if ((variant.uri || '').indexOf('hls_audio') !== -1) {
+      return false;
+    }
     if (variant.excludeUntil !== undefined) {
       return now >= variant.excludeUntil;
     }
