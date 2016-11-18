@@ -9,7 +9,7 @@
 var
   // A fudge factor to apply to advertised playlist bitrates to account for
   // temporary flucations in client bandwidth
-  bandwidthVariance = 1.4,
+  bandwidthVariance = 1.2,
   blacklistDuration = 5 * 60, // 300 ms to blacklist
   TIME_FUDGE_FACTOR = 1 / 30, // Fudge factor to account for TimeRanges rounding
   Component = videojs.getComponent('Component'),
@@ -181,7 +181,7 @@ videojs.HlsHandler.prototype.applySafeAppendBuffer = function(mediaSource) {
           throw err;
         }
       }
-    }
+    };
     return nativeSourceBuffer;
   };
 };
@@ -666,7 +666,9 @@ videojs.HlsHandler.prototype.getQuality = function(playlist) {
   if (!playlist.attributes) {
     return '';
   }
-  if (playlist.attributes.BANDWIDTH >= 300000) {
+
+  // if video is 720p or higher, label it as HD
+  if (playlist.attributes.RESOLUTION.height >= 720) {
     return 'HD';
   }
   return 'SD';
